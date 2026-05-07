@@ -10,10 +10,9 @@ export default defineConfig({
  base: './',  // Change from '/' to './'
   build: {
     outDir: 'dist',
-    rollupOptions: {
-      output: {
-        manualChunks: undefined
-      }
-    }
+    sourcemap: false
+    },
+    server: {
+    port: 5173
   }
 })
