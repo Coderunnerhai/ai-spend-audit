@@ -8,48 +8,83 @@ dotenv.config();
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// CORS configuration - NO wildcard options needed
-app.use(cors({
-  origin: [
-    'https://ai-spend-audit-olive.vercel.app',
-    'http://localhost:5173',
-    'http://localhost:3000'
-  ],
-  credentials: true,
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
+app.use(cors());
 app.use(express.json());
 
-// ========== AUDIT ENDPOINT ==========
+// ========== POST - CREATE AUDIT ==========
 app.post('/api/audit/create', async (req, res) => {
-  console.log('✅ Audit endpoint called');
+  console.log('✅ POST /api/audit/create called');
   
   try {
     const { formData } = req.body;
     const shareableId = uuidv4();
     
+    // Calculate savings (simplified)
+    let totalSavings = 0;
+    const recommendations = [];
+    
+    if (formData?.tools?.cursor?.enabled && 
+        formData.tools.cursor.plan === 'Business' && 
+        formData.tools.cursor.seats < 20) {
+      const savings = (40 - 20) * formData.tools.cursor.seats;
+      totalSavings += savings;
+      recommendations.push({
+        tool: 'cursor',
+        toolDisplayName: 'Cursor',
+        recommendedAction: 'Switch to Pro plan',
+        potentialSavings: savings,
+        reason: `Business plan requires 20+ seats. You have ${formData.tools.cursor.seats} seats.`
+      });
+    }
+    
     res.json({
       success: true,
       shareableId: shareableId,
       auditResult: {
-        recommendations: [],
-        totalMonthlySavings: 0,
-        totalAnnualSavings: 0,
-        isHighSavings: false,
-        isOptimal: true,
-        summary: "Your backend is working!"
+        recommendations: recommendations,
+        totalMonthlySavings: totalSavings,
+        totalAnnualSavings: totalSavings * 12,
+        isHighSavings: totalSavings > 500,
+        isOptimal: totalSavings === 0,
+        summary: totalSavings === 0 ? "Great news! Your AI setup is optimized." : `You could save $${totalSavings}/month.`
       }
     });
+    
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
 });
 
-// ========== LEAD CAPTURE ENDPOINT ==========
+// ========== GET - RETRIEVE AUDIT BY ID ==========
+app.get('/api/audit/:shareableId', async (req, res) => {
+  console.log('✅ GET /api/audit/:id called for:', req.params.shareableId);
+  
+  try {
+    const { shareableId } = req.params;
+    
+    // Return mock data for now
+    // Later, fetch from MongoDB using shareableId
+    res.json({
+      success: true,
+      audit: {
+        recommendations: [],
+        totalMonthlySavings: 0,
+        totalAnnualSavings: 0,
+        isHighSavings: false,
+        isOptimal: true,
+        summary: `Shareable audit results for ID: ${shareableId}`,
+        createdAt: new Date()
+      }
+    });
+    
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+});
+
+// ========== POST - CAPTURE LEAD ==========
 app.post('/api/leads/capture', async (req, res) => {
-  console.log('✅ Lead capture endpoint called');
+  console.log('✅ POST /api/leads/capture called');
   
   try {
     const { email, companyName, role } = req.body;
@@ -63,6 +98,7 @@ app.post('/api/leads/capture', async (req, res) => {
       message: 'Lead captured successfully',
       leadId: uuidv4()
     });
+    
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
@@ -75,4 +111,7 @@ app.get('/api/health', (req, res) => {
 
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`✅ POST /api/audit/create`);
+  console.log(`✅ GET /api/audit/:shareableId`);
+  console.log(`✅ POST /api/leads/capture`);
 });
