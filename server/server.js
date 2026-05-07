@@ -1,63 +1,46 @@
 import express from 'express';
 import cors from 'cors';
-import dotenv from 'dotenv';
 import { v4 as uuidv4 } from 'uuid';
-
-dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// ✅ Allow all origins for testing (temporarily)
-app.use(cors({
-  origin: '*',
-  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
-  allowedHeaders: ['Content-Type', 'Authorization']
-}));
-
+// Enable CORS for all origins
+app.use(cors());
 app.use(express.json());
 
-// ✅ Handle preflight requests
-app.options('/api/audit/create', (req, res) => {
-  res.header('Access-Control-Allow-Methods', 'POST, OPTIONS');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  res.sendStatus(200);
-});
-
-// Your POST endpoint
-app.post('/api/audit/create', async (req, res) => {
-  console.log('✅ POST /api/audit/create called');
+// Simple audit endpoint
+app.post('/api/audit/create', (req, res) => {
+  console.log('✅ Audit endpoint called');
   console.log('Request body:', req.body);
   
-  try {
-    const { formData } = req.body;
-    
-    // Your audit logic here
-    const shareableId = uuidv4();
-    
-    res.json({
-      success: true,
-      shareableId: shareableId,
-      auditResult: {
-        recommendations: [],
-        totalMonthlySavings: 0,
-        totalAnnualSavings: 0,
-        isHighSavings: false,
-        isOptimal: true,
-        summary: "Test success - backend is working!"
-      }
-    });
-    
-  } catch (error) {
-    res.status(500).json({ success: false, error: error.message });
-  }
+  const shareableId = uuidv4();
+  
+  res.json({
+    success: true,
+    shareableId: shareableId,
+    auditResult: {
+      recommendations: [],
+      totalMonthlySavings: 0,
+      totalAnnualSavings: 0,
+      isHighSavings: false,
+      isOptimal: true,
+      summary: "Your backend is working! This is a test response."
+    }
+  });
 });
 
-// Health check (GET)
+// Health check
 app.get('/api/health', (req, res) => {
   res.json({ status: 'ok', timestamp: new Date() });
 });
 
-app.listen(PORT, () => {
-  console.log(`🚀 Server running on port ${PORT}`);
+// Root endpoint
+app.get('/', (req, res) => {
+  res.json({ message: 'API is running' });
+});
+
+app.listen(PORT, '0.0.0.0', () => {
+  console.log(`✅ Server running on port ${PORT}`);
+  console.log(`✅ POST /api/audit/create ready`);
 });
