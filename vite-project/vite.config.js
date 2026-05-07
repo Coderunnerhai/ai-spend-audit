@@ -10,9 +10,13 @@ export default defineConfig({
  base: './',  // Change from '/' to './'
   build: {
     outDir: 'dist',
-    sourcemap: false
-    },
-    server: {
-    port: 5173
+    assetsDir: 'assets',
+    rollupOptions: {
+      output: {
+        entryFileNames: 'assets/index.js',
+        chunkFileNames: 'assets/[name].js',
+        assetFileNames: 'assets/[name].[ext]'
+      }
+    }
   }
 })
