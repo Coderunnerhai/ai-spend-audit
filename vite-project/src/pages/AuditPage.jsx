@@ -78,6 +78,10 @@ useEffect(() => {
     
     try {
       const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
+
+      console.log('API_URL being used:', API_URL);
+console.log('Full URL:', `${API_URL}/api/audit/create`);
+
 const response = await axios.post(`${API_URL}/api/audit/create`, {
         formData: payload
       });
