@@ -44,6 +44,20 @@ app.get('/', (req, res) => {
   });
 });
 
+// Add this temporary test route to your server.js
+app.post('/api/audit/create', (req, res) => {
+  console.log('✅ Test endpoint hit!');
+  res.json({
+    success: true,
+    message: 'Backend is working! This is a test response.',
+    shareableId: 'test-123',
+    auditResult: {
+      totalMonthlySavings: 100,
+      summary: 'This is a test response. Your route is now working.'
+    }
+  });
+});
+
 // MongoDB connection
 mongoose.connect(process.env.MONGODB_URI)
   .then(() => console.log('✅ MongoDB connected'))
