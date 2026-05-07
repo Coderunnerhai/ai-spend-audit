@@ -1,61 +1,40 @@
 import express from 'express';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import mongoose from 'mongoose';
-import auditRoutes from './routes/auditRoutes.js';
-import leadRoutes from './routes/leadRoutes.js';
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3001;
 
-// CORS configuration - NO wildcards
 app.use(cors());
-
 app.use(express.json());
 
-// Routes - NO wildcards, just specific paths
-// app.use('/api/audit', auditRoutes);
-app.use('/api/leads', leadRoutes);
-
-// Health check - specific path
-app.get('/api/health', (req, res) => {
-  res.json({ status: 'ok', timestamp: new Date() });
-});
-
-// Root route - specific path
-app.get('/', (req, res) => {
-  res.json({ 
-    message: 'AI Spend Audit API is running',
-    endpoints: {
-      health: '/api/health',
-      createAudit: 'POST /api/audit/create',
-      getAudit: 'GET /api/audit/:shareableId',
-      captureLead: 'POST /api/leads/capture'
-    }
-  });
-});
-
-// Add this temporary test route to your server.js
+// SIMPLE TEST ROUTE - NO DEPENDENCIES
 app.post('/api/audit/create', (req, res) => {
   console.log('✅ Test endpoint hit!');
   res.json({
     success: true,
-    message: 'Backend is working! This is a test response.',
+    message: 'Backend is working!',
     shareableId: 'test-123',
     auditResult: {
-      totalMonthlySavings: 100,
-      summary: 'This is a test response. Your route is now working.'
+      totalMonthlySavings: 99,
+      summary: 'Test response - your API is reachable!'
     }
   });
 });
 
-// MongoDB connection
-mongoose.connect(process.env.MONGODB_URI)
-  .then(() => console.log('✅ MongoDB connected'))
-  .catch(err => console.error('MongoDB error:', err));
+// Health check
+app.get('/api/health', (req, res) => {
+  res.json({ status: 'ok', timestamp: new Date() });
+});
+
+// Root route
+app.get('/', (req, res) => {
+  res.json({ message: 'API is running', endpoints: ['POST /api/audit/create', 'GET /api/health'] });
+});
 
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
+  console.log(`✅ Test endpoint: POST /api/audit/create`);
 });
