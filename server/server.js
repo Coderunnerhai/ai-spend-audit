@@ -49,6 +49,19 @@ app.use(cors({
 }));
 app.use(express.json());
 
+// Add this after your middleware setup
+app.get('/', (req, res) => {
+  res.json({ 
+    message: 'AI Spend Audit API is running',
+    endpoints: {
+      health: '/api/health',
+      createAudit: 'POST /api/audit/create',
+      getAudit: 'GET /api/audit/:shareableId',
+      captureLead: 'POST /api/leads/capture'
+    }
+  });
+});
+
 // Rate limiting
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
