@@ -72,33 +72,31 @@ useEffect(() => {
     });
     
     const payload = {
-      ...formData,
-      tools: enabledTools
-    };
+    teamSize: formData.teamSize,
+    primaryUseCase: formData.primaryUseCase,
+    tools: enabledTools
+  };
     
     try {
-      const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:3001';
-
-      console.log('API_URL being used:', API_URL);
-console.log('Full URL:', `${API_URL}/api/audit/create`);
-
-const response = await axios.post(`${API_URL}/api/audit/create`, {
-        formData: payload
-      });
-      
-      if (response.data.success) {
-        sessionStorage.setItem('auditResults', JSON.stringify(response.data.auditResult));
-        sessionStorage.setItem('shareableId', response.data.shareableId);
-        navigate('/results');
-      }
-    } catch (error) {
-      console.error('Error creating audit:', error);
-      alert('Something went wrong. Please try again.');
-    } finally {
-      setLoading(false);
+    // ✅ IMPORTANT: Use POST, not GET
+    const response = await axios.post('https://ai-spend-audit.onrender.com/api/audit/create', {
+      formData: payload
+    });
+    
+    console.log('Response:', response.data);
+    
+    if (response.data.success) {
+      sessionStorage.setItem('auditResults', JSON.stringify(response.data.auditResult));
+      sessionStorage.setItem('shareableId', response.data.shareableId);
+      navigate('/results');
     }
-  };
-
+  } catch (error) {
+    console.error('Error details:', error);
+    alert('Error: ' + (error.response?.data?.error || error.message));
+  } finally {
+    setLoading(false);
+  }
+};
   if (!formData.tools || Object.keys(formData.tools).length === 0) {
     return (
       <div className="min-h-screen flex items-center justify-center">
