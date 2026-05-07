@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ToolForm from '../components/ToolForm';
 import { TOOLS } from '../constants/tools';
-import { API_BASE_URL } from '../services/api';
+import { API_URL } from '../config';
 
 
 export default function AuditPage() {
@@ -80,12 +80,10 @@ const handleSubmit = async (e) => {
   };
   
   try {
-    // ✅ DIRECTLY HARDCODE THE RENDER URL
-    const response = await axios.post('https://ai-spend-audit.onrender.com/api/audit/create', {
+    console.log('Calling:', `${API_URL}/api/audit/create`);
+    const response = await axios.post(`${API_URL}/api/audit/create`, {
       formData: payload
     });
-    
-    console.log('Response:', response.data);
     
     if (response.data.success) {
       sessionStorage.setItem('auditResults', JSON.stringify(response.data.auditResult));
@@ -93,8 +91,9 @@ const handleSubmit = async (e) => {
       navigate('/results');
     }
   } catch (error) {
-    console.error('Error:', error);
-    alert('Error: ' + (error.response?.data?.error || error.message));
+    console.error('Full error:', error);
+    console.error('Error config:', error.config);
+    alert(`Error: ${error.message}. Check console for details.`);
   } finally {
     setLoading(false);
   }
@@ -127,6 +126,16 @@ const handleSubmit = async (e) => {
               className="w-full px-3 py-2 border rounded-lg"
               required
             />
+            <button
+            type="button"
+            onClick={() => {
+              console.log('API_URL being used:', API_URL);
+              alert(`API_URL is: ${API_URL}`);
+            }}
+            className="w-full mt-4 px-6 py-2 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600"
+          >
+            Check API URL
+          </button>
           </div>
           
           <div className="mb-6">
