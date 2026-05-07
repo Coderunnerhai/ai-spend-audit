@@ -1,8 +1,11 @@
 // frontend/src/pages/HomePage.jsx
 import React from 'react';
 import { Zap, TrendingDown, Share2 } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+
 
 export default function HomePage() {
+  const navigate = useNavigate()
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
       <div className="container mx-auto px-4 py-16">
@@ -15,12 +18,9 @@ export default function HomePage() {
             Most startups save $247/month on average.
           </p>
           {/* SIMPLE HTML LINK - NO REACT ROUTER */}
-          <a 
-            href="/audit"
-            className="inline-flex items-center px-8 py-4 bg-purple-600 text-white text-lg font-semibold rounded-lg hover:bg-purple-700 transition transform hover:scale-105"
-          >
-            Start Free Audit →
-          </a>
+          <button onClick={() => navigate('/audit')}>
+      Start Free Audit →
+    </button>
         </div>
         
         {/* Stats */}
