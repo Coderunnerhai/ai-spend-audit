@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Share2, ArrowLeft } from 'lucide-react';
-import { API_BASE_URL } from '../services/api';
+import { API_URL } from '../config';
 
 export default function PublicAuditPage() {
   const { shareableId } = useParams();
@@ -22,7 +22,7 @@ const fetchAudit = async () => {
   try {
     setLoading(true);
     // ✅ DIRECTLY HARDCODE THE RENDER URL
-    const response = await axios.get(`https://ai-spend-audit.onrender.com/api/audit/${shareableId}`);
+    const response = await axios.get(`${API_URL}/api/audit/${shareableId}`);
     
     if (response.data.success) {
       setAudit(response.data.audit);

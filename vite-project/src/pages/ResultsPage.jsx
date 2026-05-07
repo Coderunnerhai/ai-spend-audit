@@ -3,7 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Download, Share2, Calendar, ArrowLeft, CheckCircle, AlertCircle } from 'lucide-react';
-import { API_BASE_URL } from '../services/api';
+import { API_URL } from '../config';
 
 export default function ResultsPage() {
   const navigate = useNavigate();
@@ -52,7 +52,7 @@ const handleSubmitEmail = async (e) => {
   
   try {
     // ✅ DIRECTLY HARDCODE THE RENDER URL
-    const response = await axios.post('https://ai-spend-audit.onrender.com/api/leads/capture', {
+    const response = await axios.post(`${API_URL}/api/leads/capture`, {
       email: emailForm.email,
       companyName: emailForm.companyName,
       role: emailForm.role,
