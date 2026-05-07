@@ -4,6 +4,8 @@ import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import ToolForm from '../components/ToolForm';
 import { TOOLS } from '../constants/tools';
+import { API_BASE_URL } from '../services/api';
+
 
 export default function AuditPage() {
   const navigate = useNavigate();
@@ -61,6 +63,8 @@ useEffect(() => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log('Making POST request to:', 'https://ai-spend-audit.onrender.com/api/audit/create');
+console.log('With payload:', payload);
     setLoading(true);
     
     // Filter out disabled tools before sending
@@ -79,9 +83,9 @@ useEffect(() => {
     
     try {
     // ✅ IMPORTANT: Use POST, not GET
-    const response = await axios.post('https://ai-spend-audit.onrender.com/api/audit/create', {
-      formData: payload
-    });
+    const response = await axios.post(`${API_BASE_URL}/api/audit/create`, {
+  formData: payload
+});
     
     console.log('Response:', response.data);
     

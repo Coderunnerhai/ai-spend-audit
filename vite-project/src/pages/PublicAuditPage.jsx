@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import axios from 'axios';
 import { Share2, ArrowLeft } from 'lucide-react';
+import { API_BASE_URL } from '../services/api';
 
 export default function PublicAuditPage() {
   const { shareableId } = useParams();
@@ -21,7 +22,7 @@ export default function PublicAuditPage() {
       setLoading(true);
       console.log('Fetching audit with ID:', shareableId);
       
-      const response = await axios.get(`http://localhost:3001/api/audit/${shareableId}`);
+      const response = await axios.get(`${API_BASE_URL}/api/audit/${shareableId}`);
       console.log('Response:', response.data);
       
       if (response.data.success) {

@@ -3,6 +3,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { Download, Share2, Calendar, ArrowLeft, CheckCircle, AlertCircle } from 'lucide-react';
+import { API_BASE_URL } from '../services/api';
 
 export default function ResultsPage() {
   const navigate = useNavigate();
@@ -49,14 +50,13 @@ const handleSubmitEmail = async (e) => {
   setSubmitting(true);
   
   try {
-    const response = await axios.post('http://localhost:3001/api/leads/capture', {
-      email: emailForm.email,
-      companyName: emailForm.companyName,
-      role: emailForm.role,
-      auditData: auditResults,
-      shareableId: shareableId,
-      honeypot: e.target.honeypot?.value || ''
-    });
+    const response = await axios.post(`${API_BASE_URL}/api/leads/capture`, {
+  email: emailForm.email,
+  companyName: emailForm.companyName,
+  role: emailForm.role,
+  auditData: auditResults,
+  shareableId: shareableId
+});
     
     console.log('Lead capture response:', response.data);
     
