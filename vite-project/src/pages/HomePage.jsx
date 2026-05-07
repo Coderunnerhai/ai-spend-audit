@@ -1,9 +1,10 @@
 // frontend/src/pages/HomePage.jsx
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { Zap, TrendingDown, Share2, CheckCircle } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
 
 export default function HomePage() {
+  const navigate = useNavigate();
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 via-white to-blue-50">
       {/* Hero Section */}
@@ -16,12 +17,12 @@ export default function HomePage() {
             Get a free AI spend audit and discover hidden savings in minutes. 
             Most startups save $247/month on average.
           </p>
-          <Link
-            to="/audit"
-            className="inline-flex items-center px-8 py-4 bg-purple-600 text-white text-lg font-semibold rounded-lg hover:bg-purple-700 transition transform hover:scale-105"
-          >
-            Start Free Audit →
-          </Link>
+          <button
+      onClick={() => navigate('/audit')}
+      className="inline-flex items-center px-8 py-4 bg-purple-600 text-white text-lg font-semibold rounded-lg hover:bg-purple-700"
+    >
+      Start My Audit →
+    </button>
         </div>
         
         {/* Stats */}
