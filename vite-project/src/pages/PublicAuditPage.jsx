@@ -17,30 +17,25 @@ export default function PublicAuditPage() {
     }
   }, [shareableId]);
 
-  const fetchAudit = async () => {
-    try {
-      setLoading(true);
-      console.log('Fetching audit with ID:', shareableId);
-      
-      const response = await axios.get(`${API_BASE_URL}/api/audit/${shareableId}`);
-      console.log('Response:', response.data);
-      
-      if (response.data.success) {
-        setAudit(response.data.audit);
-      } else {
-        setError('Audit not found');
-      }
-    } catch (error) {
-      console.error('Error details:', error);
-      if (error.response) {
-        setError(`Error ${error.response.status}: ${error.response.data?.error || 'Audit not found'}`);
-      } else {
-        setError('Cannot connect to server');
-      }
-    } finally {
-      setLoading(false);
+ // frontend/src/pages/PublicAuditPage.jsx
+const fetchAudit = async () => {
+  try {
+    setLoading(true);
+    // ✅ DIRECTLY HARDCODE THE RENDER URL
+    const response = await axios.get(`https://ai-spend-audit.onrender.com/api/audit/${shareableId}`);
+    
+    if (response.data.success) {
+      setAudit(response.data.audit);
+    } else {
+      setError('Audit not found');
     }
-  };
+  } catch (error) {
+    console.error('Error:', error);
+    setError('Cannot connect to server');
+  } finally {
+    setLoading(false);
+  }
+};
 
   const handleShare = () => {
     navigator.clipboard.writeText(window.location.href);

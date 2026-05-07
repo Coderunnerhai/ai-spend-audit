@@ -61,31 +61,29 @@ useEffect(() => {
     }));
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    console.log('Making POST request to:', 'https://ai-spend-audit.onrender.com/api/audit/create');
-console.log('With payload:', payload);
-    setLoading(true);
-    
-    // Filter out disabled tools before sending
-    const enabledTools = {};
-    Object.keys(formData.tools).forEach(toolId => {
-      if (formData.tools[toolId].enabled) {
-        enabledTools[toolId] = formData.tools[toolId];
-      }
-    });
-    
-    const payload = {
+  // frontend/src/pages/AuditPage.jsx
+const handleSubmit = async (e) => {
+  e.preventDefault();
+  setLoading(true);
+  
+  const enabledTools = {};
+  Object.keys(formData.tools).forEach(toolId => {
+    if (formData.tools[toolId].enabled) {
+      enabledTools[toolId] = formData.tools[toolId];
+    }
+  });
+  
+  const payload = {
     teamSize: formData.teamSize,
     primaryUseCase: formData.primaryUseCase,
     tools: enabledTools
   };
-    
-    try {
-    // ✅ IMPORTANT: Use POST, not GET
-    const response = await axios.post(`${API_BASE_URL}/api/audit/create`, {
-  formData: payload
-});
+  
+  try {
+    // ✅ DIRECTLY HARDCODE THE RENDER URL
+    const response = await axios.post('https://ai-spend-audit.onrender.com/api/audit/create', {
+      formData: payload
+    });
     
     console.log('Response:', response.data);
     
@@ -95,7 +93,7 @@ console.log('With payload:', payload);
       navigate('/results');
     }
   } catch (error) {
-    console.error('Error details:', error);
+    console.error('Error:', error);
     alert('Error: ' + (error.response?.data?.error || error.message));
   } finally {
     setLoading(false);

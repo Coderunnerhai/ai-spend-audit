@@ -45,41 +45,31 @@ export default function ResultsPage() {
   };
 
   // frontend/src/pages/ResultsPage.jsx - Updated handleSubmitEmail
+// frontend/src/pages/ResultsPage.jsx
 const handleSubmitEmail = async (e) => {
   e.preventDefault();
   setSubmitting(true);
   
   try {
-    const response = await axios.post(`${API_BASE_URL}/api/leads/capture`, {
-  email: emailForm.email,
-  companyName: emailForm.companyName,
-  role: emailForm.role,
-  auditData: auditResults,
-  shareableId: shareableId
-});
-    
-    console.log('Lead capture response:', response.data);
+    // ✅ DIRECTLY HARDCODE THE RENDER URL
+    const response = await axios.post('https://ai-spend-audit.onrender.com/api/leads/capture', {
+      email: emailForm.email,
+      companyName: emailForm.companyName,
+      role: emailForm.role,
+      auditData: auditResults,
+      shareableId: shareableId,
+      honeypot: e.target.honeypot?.value || ''
+    });
     
     if (response.data.success) {
       setSubmitted(true);
       setTimeout(() => {
         setShowEmailModal(false);
-        alert('Report saved! Check your email for the full report (link is in console for testing).');
       }, 2000);
-    } else {
-      alert('Error: ' + (response.data.error || 'Unknown error'));
     }
   } catch (error) {
-    console.error('Error details:', error);
-    console.error('Error response:', error.response);
-    
-    if (error.response) {
-      alert(`Server error: ${error.response.data?.error || error.message}`);
-    } else if (error.request) {
-      alert('Cannot connect to server. Please make sure backend is running on port 3001');
-    } else {
-      alert('Error: ' + error.message);
-    }
+    console.error('Error:', error);
+    alert('Error: ' + (error.response?.data?.error || error.message));
   } finally {
     setSubmitting(false);
   }
