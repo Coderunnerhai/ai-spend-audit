@@ -57,26 +57,32 @@ app.post('/api/audit/create', async (req, res) => {
 
 // ========== GET - RETRIEVE AUDIT BY ID ==========
 app.get('/api/audit/:shareableId', async (req, res) => {
-  console.log('✅ GET /api/audit/:id called for:', req.params.shareableId);
-  
   try {
     const { shareableId } = req.params;
+    console.log('Fetching audit:', shareableId);
     
-    // Return mock data for now
-    // Later, fetch from MongoDB using shareableId
+    // For now, return mock data
+    // Later, fetch from your database
     res.json({
       success: true,
       audit: {
-        recommendations: [],
-        totalMonthlySavings: 0,
-        totalAnnualSavings: 0,
+        shareableId: shareableId,
+        totalMonthlySavings: 247,
+        totalAnnualSavings: 2964,
         isHighSavings: false,
-        isOptimal: true,
-        summary: `Shareable audit results for ID: ${shareableId}`,
-        createdAt: new Date()
+        isOptimal: false,
+        recommendations: [
+          {
+            tool: 'Cursor',
+            currentPlan: 'Business',
+            recommendedAction: 'Switch to Pro',
+            potentialSavings: 40,
+            reason: 'You have only 2 seats, Business plan requires 20+'
+          }
+        ],
+        summary: 'We found optimization opportunities that could save you $247/month!'
       }
     });
-    
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
