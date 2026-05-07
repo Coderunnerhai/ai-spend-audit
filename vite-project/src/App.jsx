@@ -3,6 +3,7 @@ import HomePage from './pages/HomePage';
 import AuditPage from './pages/AuditPage';
 import ResultsPage from './pages/ResultsPage';
 import PublicAuditPage from './pages/PublicAuditPage';
+import './App.css';
 
 function App() {
   return (
