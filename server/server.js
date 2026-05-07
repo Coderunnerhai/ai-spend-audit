@@ -11,19 +11,12 @@ const app = express();
 const PORT = process.env.PORT || 3001;
 
 // CORS configuration - NO wildcards
-app.use(cors({
-  origin: [
-    'https://ai-spend-audit-olive.vercel.app',
-    'http://localhost:5173',
-    'http://localhost:3000'
-  ],
-  credentials: true
-}));
+app.use(cors());
 
 app.use(express.json());
 
 // Routes - NO wildcards, just specific paths
-app.use('/api/audit', auditRoutes);
+// app.use('/api/audit', auditRoutes);
 app.use('/api/leads', leadRoutes);
 
 // Health check - specific path
