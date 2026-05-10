@@ -7,7 +7,8 @@ export default defineConfig({
   plugins: [react(),
     tailwindcss()
   ],
- base: './',  // Change from '/' to './'
+  // Root-relative assets so /audit/:id and other deep links still resolve /assets/* correctly.
+  base: './',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
