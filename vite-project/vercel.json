@@ -4,8 +4,18 @@
   "framework": "vite",
   "routes": [
     {
-      "src": "/assets/(.*)",
-      "dest": "/assets/$1"
+      "src": "/assets/index.js",
+      "headers": {
+        "Content-Type": "application/javascript"
+      },
+      "dest": "/assets/index.js"
+    },
+    {
+      "src": "/assets/index.css",
+      "headers": {
+        "Content-Type": "text/css"
+      },
+      "dest": "/assets/index.css"
     },
     {
       "src": "/audit/(.*)",
