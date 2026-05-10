@@ -7,8 +7,8 @@ export default defineConfig({
   plugins: [react(),
     tailwindcss()
   ],
-  // Root-relative assets so /audit/:id and other deep links still resolve /assets/* correctly.
-  base: './',
+  // Must be '/' for SPAs: './assets/...' breaks on /audit/:id (browser requests /audit/assets/... → HTML fallback).
+  base: '/',
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
